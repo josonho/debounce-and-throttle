@@ -1,0 +1,57 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <div id="app">
+    <h3>vue 通过闭包实现防抖节流</h3>
+    <input placeholder="输入以测试防抖" @input="onDebounce">
+    <input placeholder="输入以测试节流" @input="onThrottle">
+  </div>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  const debounce = (() => {
+    let debounceTimer = null
+    return function (fn, delay) {
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(fn, delay)
+    }
+  })()
+  
+  const throttle = (() => {
+    let throttleCanRun = true 
+    return function (fn, delay) {
+      if (!throttleCanRun) return
+      throttleCanRun = false
+      setTimeout(() => {
+        fn()
+        throttleCanRun = true
+      }, 500) 
+    }
+  })()
+
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        text: '测试this指向'
+      }
+    },
+    methods: {
+      onDebounce() {
+        // 调用时需注意this指向，可使用箭头函数，或者使用self = this
+        debounce(() => {
+          console.log('防抖...', this.text)
+        }, 500)
+      },  
+      onThrottle() {
+        throttle(() => {
+          console.log('节流...', this.text)
+        }, 300)
+      },
+    }
+  })
+</script>

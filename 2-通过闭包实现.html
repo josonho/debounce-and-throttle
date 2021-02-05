@@ -15,7 +15,8 @@
 <script>
   /* 闭包只能声明一次，
   如果放在methods将会随事件触发而声明，
-  所以需将闭包提取出来 */
+  所以需将闭包提取出来，
+  通过立即执行函数创建闭包 */
   const debounce = (() => {
     // 利用闭包使变量debounceTimer私有化，不被销毁
     let debounceTimer = null 
