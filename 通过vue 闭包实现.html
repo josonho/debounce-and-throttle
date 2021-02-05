@@ -1,0 +1,55 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <div id="app">
+    <h3>vue 通过闭包实现防抖节流</h3>
+    <input placeholder="输入以测试防抖" @input="onDebounce">
+    <input placeholder="输入以测试节流" @input="onThrottle">
+  </div>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  /* 闭包只能声明一次，
+  如果放在methods将会随事件触发而声明，
+  所以需将闭包提取出来 */
+  const debounce = (() => {
+    // 利用闭包使变量debounceTimer私有化，不被销毁
+    let debounceTimer = null 
+    return function () {
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => {
+        console.log('防抖...')
+      }, 500)
+    }
+  })()
+
+  const throttle = (() => {
+    // 利用闭包使变量throttleCanRun私有化，不被销毁
+    let throttleCanRun = true 
+    return function () {
+      if (!throttleCanRun) return
+      throttleCanRun = false
+      setTimeout(() => {
+        console.log('节流...')
+        throttleCanRun = true
+      }, 500) 
+    }
+  })()
+
+  new Vue({
+    el: '#app',
+    methods: {
+      onDebounce() {
+        debounce()
+      },
+
+      onThrottle() {
+        throttle()
+      },
+    }
+  })
+</script>

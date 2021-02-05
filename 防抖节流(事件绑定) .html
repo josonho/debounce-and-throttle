@@ -2,34 +2,64 @@
 <html lang="en">
 <body>
   <div id="app">
-    <input placeholder="输入以测试防抖" @input="inputDebounce">
-    <input placeholder="输入以测试节流" @input="inputThrottle">
+    <h3>vue 通过data属性实现防抖节流</h3>
+    <input placeholder="输入以测试防抖" @input="onDataDebounce">
+    <input placeholder="输入以测试节流" @input="onDataThrottle">
+    <br/> <br/> <br/> <br/>
+    <h3>vue 通过闭包实现防抖节流</h3>
+    <input placeholder="输入以测试防抖" @input="onClosureDebounce">
+    <input placeholder="输入以测试节流" @input="onClosureThrottle">
   </div>
 </body>
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script>
-new Vue({
-  el: '#app',
-  methods: {
-    inputDebounce() {
-      clearTimeout(this.debounceTimer)
-      this.debounceTimer = setTimeout(() => {
+  // 闭包只能声明一次，如果放在methods将会随事件触发而声明，所以需将闭包提取出来
+  const closureDebounce = (() => {
+    let dataDebounceTimer = null
+    return function () {
+      clearTimeout(dataDebounceTimer)
+      dataDebounceTimer = setTimeout(() => {
         console.log('防抖...')
       }, 500)
-    },
-    inputThrottle() {
-      if (this.throttleCanRun === undefined) {
-        this.throttleCanRun = true
-      }
-      if (!this.throttleCanRun) return
-      this.throttleCanRun = false
-      setTimeout(() => {
-        console.log('节流...')
-        this.throttleCanRun = true
-      }, 500) 
     }
-  }
-})
+  })()
+
+  new Vue({
+    el: '#app',
+    methods: {
+      onDataDebounce() {
+        clearTimeout(this.dataDebounceTimer)
+        this.dataDebounceTimer = setTimeout(() => {
+          console.log('防抖...')
+        }, 500)
+      },
+      onDataThrottle() {
+        if (this.dataThrottleCanRun === undefined) {
+          this.dataThrottleCanRun = true
+        }
+        if (!this.dataThrottleCanRun) return
+        this.dataThrottleCanRun = false
+        setTimeout(() => {
+          console.log('节流...')
+          this.dataThrottleCanRun = true
+        }, 500) 
+      },
+      onClosureDebounce() {
+        closureDebounce()
+      },
+      onClosureThrottle() {
+        if (this.dataThrottleCanRun === undefined) {
+          this.dataThrottleCanRun = true
+        }
+        if (!this.dataThrottleCanRun) return
+        this.dataThrottleCanRun = false
+        setTimeout(() => {
+          console.log('节流...')
+          this.dataThrottleCanRun = true
+        }, 500) 
+      },
+    }
+  })
 </script>
