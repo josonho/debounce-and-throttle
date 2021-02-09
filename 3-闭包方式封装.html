@@ -6,6 +6,7 @@
     <p>tips: 请打开控制台观察打印变化</p>
     <input placeholder="输入以测试防抖" @input="onDebounce">
     <input placeholder="输入以测试节流" @input="onThrottle">
+    <input placeholder="输入以测试时间差节流" @input="onTimeThrottle">
   </div>
 </body>
 </html>
@@ -20,15 +21,45 @@
     }
   })()
   
+  // 计时器实现节流
   const throttle = (() => {
+    // 创建闭包时声明throttleCanRun为true
     let throttleCanRun = true 
     return function (fn, delay) {
+      // 只有第一次执行，或每隔delay毫秒，throttleCanRun才为true，才能往下执行
       if (!throttleCanRun) return
+      /* 每次执行到这里都将throttleCanRun置为false，
+      而throttleCanRun置为true需等到delay毫秒后才触发 
+      达到每隔delay毫秒后，throttleCanRun变为true一次，
+      达到节流的目的 */
       throttleCanRun = false
       setTimeout(() => {
         fn()
         throttleCanRun = true
       }, delay) 
+    }
+  })()
+  
+
+  // 时间差实现节流
+  const timeThrottle = (() => {
+    let start
+    return function (fn, delay) {
+      // 第一次触发事件时，初始化start
+      if (!start) {
+        /* 第一次触发事件时先执行fn，
+        因为这里不执行fn的话，
+        当用户触发事件维持时间少于delay毫秒时，
+        fn将不被触发*/
+        fn() 
+        start = new Date()
+      }
+      // 当事件反复触发，这里判断时间差是否大于delay
+      if (new Date() - start > delay) {
+        fn()
+        // 重置start为最新时间
+        start = new Date()
+      }
     }
   })()
 
@@ -46,6 +77,11 @@
           console.log('节流...')
         }, 300)
       },
+      onTimeThrottle() {
+        timeThrottle(() => {
+          console.log('时间差节流...')
+        }, 300)
+      }
     }
   })
 </script>

@@ -19,6 +19,7 @@
   const debounce = (() => {
     // 利用闭包使变量debounceTimer私有化，不被销毁
     let debounceTimer = null 
+    // debounce()触发的是这个内部函数
     return function () {
       clearTimeout(debounceTimer)
       debounceTimer = setTimeout(() => {
