@@ -13,7 +13,7 @@
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
 <script>
   new Vue({
     el: '#app',
@@ -75,7 +75,7 @@ closure() // 2
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
 <script>
   /* 闭包只能声明一次，
   如果放在methods将会随事件触发而声明，
@@ -135,7 +135,7 @@ closure() // 2
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
 <script>
   const debounce = (() => {
     let debounceTimer = null
